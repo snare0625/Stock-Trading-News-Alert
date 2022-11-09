@@ -1,6 +1,7 @@
 import requests
 from twilio.rest import Client
 
+
 #GET STOCK DATA
 def stock_data(stock_name, stock_api_key):
     url = f'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol={stock_name}&apikey={stock_api_key}'
@@ -10,12 +11,21 @@ def stock_data(stock_name, stock_api_key):
     return data
 
 def curr_week_close(stock_data):
-    curr_week_close = float(stock_data["Weekly Time Series"]["2022-11-08"]["4. close"])
-    return curr_week_close
+    data = stock_data["Weekly Time Series"]
+    data_list = [value for (key, value) in data.items()]
+    current_week_data = data_list[1]
+    current_week_closing_price = float(current_week_data["4. close"])
+    #curr_week_close = float(stock_data["Weekly Time Series"]["2022-11-08"]["4. close"])
+
+    return current_week_closing_price
 
 def prev_week_close(stock_data):
-    prev_week_close = float(stock_data["Weekly Time Series"]["2022-11-04"]["4. close"])
-    return prev_week_close
+    data = stock_data["Weekly Time Series"]
+    data_list = [value for (key, value) in data.items()]
+    previous_week_data = data_list[0]
+    previous_week_closing_price = float(previous_week_data["4. close"])
+    #prev_week_close = float(stock_data["Weekly Time Series"]["2022-11-04"]["4. close"])
+    return previous_week_closing_price
 
 def stock_weekly_perc_diff(curr_week_close, prev_week_close):
     positive_diff = abs(curr_week_close - prev_week_close)
